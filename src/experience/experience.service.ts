@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Experience } from './schemas/experience.shema';
 import * as mongoose from 'mongoose';
@@ -40,7 +40,12 @@ export class ExperienceService {
 
     //? @param id: to retrieve data id from controller
     async findById(id: String): Promise<Experience> {
+        const isValidId = mongoose.isValidObjectId(id);
+        if (!isValidId) {
+            throw new BadRequestException('Please enter correct id')
+        }
         const experience = await this.experienceModel.findById(id);
+
         if (!experience) {
             throw new NotFoundException('Experience not found')
         }
