@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   //* Make the application listen on port 3000
-  await app.listen(3000);
+  await app.listen(3012);
 }
 
 //* Call the bootstrap function to start the NestJS application

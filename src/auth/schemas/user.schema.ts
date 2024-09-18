@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from 'mongoose';
+import { Role } from "../enums/role.enum";
 
 
 //* Define the User schema class with timestamps enabled
 @Schema({
     timestamps: true //* Automatically manage createdAt and updatedAt fields
 })
-export class User extends Document  {
+export class User extends Document {
 
     //* Name of the user
     @Prop()
@@ -19,6 +20,13 @@ export class User extends Document  {
     //* Password of the user
     @Prop()
     password: string;
+
+    //* Roles of the user
+    @Prop({
+        type: [{ type: String, enum: Role }],
+        default: [Role.User],
+    })
+    role: Role[];
 }
 
 //* Create a Mongoose schema from the User class

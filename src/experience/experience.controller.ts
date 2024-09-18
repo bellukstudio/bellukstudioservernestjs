@@ -5,6 +5,9 @@ import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { Query as ExpressQuery } from 'express-serve-static-core'
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/auth/enums/role.enum';
 
 //* Define the ExperienceController to handle HTTP requests for experiences
 @Controller('experiences')
@@ -25,7 +28,8 @@ export class ExperienceController {
     //* Handle POST requests to create a new experience
     //? @param experience: The data required to create a new experience
     @Post()
-    @UseGuards(AuthGuard())
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard(), RolesGuard)
     async createExperience(
         @Body()
         experience: CreateExperienceDto,
@@ -48,7 +52,8 @@ export class ExperienceController {
     //? @param id: The ID of the experience to update
     //? @param experience: The new data to update the experience with
     @Put(':id')
-    @UseGuards(AuthGuard())
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard(), RolesGuard)
     async updateExperience(
         @Param('id')
         id: string,
@@ -61,7 +66,8 @@ export class ExperienceController {
     //* Handle DELETE requests to remove a specific experience by its ID
     //? @param id: The ID of the experience to delete
     @Delete(':id')
-    @UseGuards(AuthGuard())
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard(), RolesGuard)
     async deleteExperience(
         @Param('id')
         id: string

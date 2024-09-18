@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -21,22 +21,29 @@ export class AuthService {
     //* Handle user sign-up by creating a new user and returning a JWT token
     //? @param signUpDto: Data transfer object containing user registration details
     async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
-        const { name, email, password } = signUpDto;
+        const { name, email, password, role } = signUpDto;
 
         //* Hash the user's password before saving it to the database
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        //* Create a new user document in the database with the hashed password
-        const user = await this.userModel.create({
-            name,
-            email,
-            password: hashedPassword
-        });
+        try {
+            //* Create a new user document in the database with the hashed password
+            const user = await this.userModel.create({
+                name,
+                email,
+                password: hashedPassword,
+                role
+            });
 
-        //* Generate a JWT token for the newly created user
-        const token = this.jwtService.sign({ id: user._id });
+            //* Generate a JWT token for the newly created user
+            const token = this.jwtService.sign({ id: user._id });
 
-        return { token };
+            return { token };
+        } catch (error) {
+            if (error?.code === 11000) {
+                throw new ConflictException('Duplicate Email Entered');
+            }
+        }
     }
 
     //* Handle user login by verifying credentials and returning a JWT token
