@@ -4,17 +4,22 @@ import { PortfolioController } from './portfolio.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PortfolioSchema } from './schemas/portfolio.schema';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 //* Define the PortfolioModule class as module in Nest js Application
 @Module({
-  imports:[
+  imports: [
     //* Import Mongoose module and auth module,
     AuthModule,
-    MongooseModule.forFeature([{name: 'Portfolio', schema: PortfolioSchema }])
+    MongooseModule.forFeature([{ name: 'Portfolio', schema: PortfolioSchema }])
   ],
   //* Declare PortofolioService
-  providers: [PortfolioService],
+  providers: [PortfolioService, {
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard
+  }],
   //* Declare PortfolioController
   controllers: [PortfolioController]
 })
-export class PortfolioModule {}
+export class PortfolioModule { }

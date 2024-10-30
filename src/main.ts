@@ -1,14 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-
+import helmet from 'helmet';
 //* Import the NestFactory to create the application instance
 //* Import the AppModule which contains the root module of the application
 //* Import ValidationPipe for validating request payloads
 async function bootstrap() {
   //* Create a NestJS application instance using AppModule
   const app = await NestFactory.create(AppModule);
-
+  app.use(helmet());
+  app.enableCors({
+    origin: ['http://localhost:3012'],
+  });
   //* Apply a global validation pipe to automatically validate incoming requests
   app.useGlobalPipes(new ValidationPipe());
 

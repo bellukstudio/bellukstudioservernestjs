@@ -23,7 +23,7 @@ export class Portfolio {
 
     //* thumbnail
     @Prop()
-    thumbnail?: string;
+    thumbnail?: object[];
     //* Reference to the current user; stores the user's ObjectId and links to the User model
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User

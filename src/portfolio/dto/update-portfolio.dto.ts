@@ -15,9 +15,6 @@ export class UpdatePortfolioDto{
     @IsString()
     readonly urlPortfolio:string
 
-    @IsNotEmpty()
-    @IsString()
-    readonly thumbnail:string
 
     @IsEmpty({ message: 'You cannot pass user id' })
     readonly user: User

@@ -8,6 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/enums/role.enum';
+import { Throttle } from '@nestjs/throttler';
 
 //* Define the ExperienceController to handle HTTP requests for experiences
 @Controller('experiences')
@@ -20,6 +21,7 @@ export class ExperienceController {
 
     //* Handle GET requests to retrieve all experiences with optional query parameters for filtering or pagination
     //? @param query: Optional query parameters for filtering and pagination
+    @Throttle({ default: { limit: 1, ttl: 2000 } })
     @Get()
     async getAllExperience(@Query() query: ExpressQuery): Promise<Experience[]> {
         return this.experienceService.findAll(query);

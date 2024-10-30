@@ -70,8 +70,24 @@ export class PortfolioService {
         });
     }
 
-    async deleteById(id:string) : Promise<Portfolio>{
-        return await this.portfolioModel.findByIdAndDelete(id) 
+    async deleteById(id: string): Promise<Portfolio> {
+        return await this.portfolioModel.findByIdAndDelete(id)
+    }
+
+    async uploadImages(id: string, files: Array<Express.Multer.File>) {
+        const portfolio = await this.portfolioModel.findById(id);
+
+        if (!portfolio) {
+            throw new NotFoundException('Book not found.');
+        }
+
+        // const images = await uploadImages(files);
+
+        // portfolio.thumbnail = images as object[];
+
+        await portfolio.save();
+
+        return portfolio;
     }
 
 }
