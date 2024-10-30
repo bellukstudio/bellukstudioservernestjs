@@ -21,7 +21,7 @@ export class ExperienceService {
     async findAll(query: Query): Promise<Experience[]> {
 
         //* Set the number of results per page
-        const resPerPage = 2;
+        const resPerPage = 10;
 
         //* Determine the current page, default to 1 if not specified
         const currentPage = Number(query.page) || 1;
@@ -54,7 +54,7 @@ export class ExperienceService {
 
     //* Find an experience by its ID
     //? @param id: the ID of the experience to retrieve
-    async findById(id: String): Promise<Experience> {
+    async findById(id: string): Promise<Experience> {
         //* Check if the provided ID is a valid MongoDB ObjectId
         const isValidId = mongoose.isValidObjectId(id);
         if (!isValidId) {
@@ -75,7 +75,7 @@ export class ExperienceService {
     //* Update an experience by its ID
     //? @param id: the ID of the experience to update
     //? @param experience: the updated experience data
-    async updateById(id: String, experience: Experience): Promise<Experience> {
+    async updateById(id: string, experience: Experience): Promise<Experience> {
         //* Find the experience by ID and update it with the new data, return the updated document
         return await this.experienceModel.findByIdAndUpdate(id, experience, {
             new: true, //* Return the updated document
@@ -85,7 +85,7 @@ export class ExperienceService {
 
     //* Delete an experience by its ID
     //? @param id: the ID of the experience to delete
-    async deleteById(id: String): Promise<Experience> {
+    async deleteById(id: string): Promise<Experience> {
         //* Find the experience by ID and delete it
         return await this.experienceModel.findByIdAndDelete(id);
     }

@@ -5,6 +5,7 @@ import { ExperienceModule } from './experience/experience.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 
 //1
 //* Define the AppModule class as the root module in the NestJS application
@@ -25,6 +26,11 @@ import { AuthModule } from './auth/auth.module';
 
     //* Import the AuthModule to manage authentication functionality
     AuthModule,
+
+    
+    //* Import PortofolioModule to manage portofolio functionality
+    PortfolioModule,
+
   ],
   
   //* Declare the AppController to handle incoming requests
