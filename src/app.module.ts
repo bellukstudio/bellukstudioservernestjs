@@ -7,6 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { FirebaseService } from './firebase/firebase.service';
+import { FirebaseModule } from './firebase/firebase.module';
 
 //1
 //* Define the AppModule class as the root module in the NestJS application
@@ -36,13 +38,16 @@ import { ThrottlerModule } from '@nestjs/throttler';
     //* Import PortofolioModule to manage portofolio functionality
     PortfolioModule,
 
+    //* Import Firebase Module
+    FirebaseModule,
+
   ],
 
   //* Declare the AppController to handle incoming requests
   controllers: [AppController],
 
   //* Declare the AppService to provide core application services
-  providers: [AppService],
+  providers: [AppService, FirebaseService],
 })
 //* Export the AppModule class
 export class AppModule { }
