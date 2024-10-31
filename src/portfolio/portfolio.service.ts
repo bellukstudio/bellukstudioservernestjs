@@ -5,6 +5,7 @@ import { Query } from 'express-serve-static-core'
 import * as mongoose from 'mongoose';
 import { title } from 'process';
 import { User } from 'src/auth/schemas/user.schema';
+import { FirebaseService } from 'src/firebase/firebase.service';
 
 @Injectable()
 export class PortfolioService {
@@ -12,7 +13,8 @@ export class PortfolioService {
     //* Constructor for injecting the portfolio model schema
     constructor(
         @InjectModel(Portfolio.name)
-        private portfolioModel: mongoose.Model<Portfolio>
+        private portfolioModel: mongoose.Model<Portfolio>,
+        private readonly firebaseService: FirebaseService
     ) { }
 
     //* Retrieve portfolio with pagination and search keyword
@@ -74,20 +76,25 @@ export class PortfolioService {
         return await this.portfolioModel.findByIdAndDelete(id)
     }
 
-    async uploadImages(id: string, files: Array<Express.Multer.File>) {
+    async uploadImage(id: string, file: Express.Multer.File) {
         const portfolio = await this.portfolioModel.findById(id);
 
         if (!portfolio) {
-            throw new NotFoundException('Book not found.');
+            throw new NotFoundException('Portfolio not found.');
         }
 
-        // const images = await uploadImages(files);
+        // Unggah file ke Firebase di dalam folder 'portfolio'
+        const destination = `portfolio/${file.originalname}`;
 
-        // portfolio.thumbnail = images as object[];
+        // Ubah uploadFile di FirebaseService untuk menerima buffer
+        const url = await this.firebaseService.uploadFile(file.buffer, destination);
 
+        // Simpan URL ke dalam field thumbnail
+        portfolio.thumbnail = url;
         await portfolio.save();
 
         return portfolio;
     }
+
 
 }
