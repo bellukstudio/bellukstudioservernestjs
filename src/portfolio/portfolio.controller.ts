@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UploadedFiles, UseGuards, UseInterceptors, ParseFilePipeBuilder, HttpStatus, UploadedFile, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards, UseInterceptors, ParseFilePipeBuilder, HttpStatus, UploadedFile, } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Query as ExpressQuery } from 'express-serve-static-core'
 import { Portfolio } from './schemas/portfolio.schema';
@@ -8,7 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CreatePortfolioDto } from './dto/create-portoflio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
 import { memoryStorage } from 'multer';
 
@@ -16,7 +16,7 @@ import { memoryStorage } from 'multer';
 export class PortfolioController {
 
     constructor(
-        private portfolioService: PortfolioService,
+        private readonly portfolioService: PortfolioService,
     ) { }
 
     @Throttle({ default: { limit: 1, ttl: 2000 } })

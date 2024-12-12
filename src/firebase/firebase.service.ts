@@ -8,7 +8,7 @@ export class FirebaseService {
 
     constructor() {
         if (admin.apps.length === 0) {
-            const serviceAccount = path.resolve(__dirname, '../../config/portofolio-2a917-firebase-adminsdk-vd2a7-b5a7f84207.json');
+            const serviceAccount = path.resolve(__dirname, '../../config/portofolio-2a917-firebase-adminsdk-vd2a7-0ae03a4788.json');
 
             admin.initializeApp({
                 credential: admin.credential.cert(serviceAccount),

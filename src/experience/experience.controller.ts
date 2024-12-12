@@ -16,7 +16,7 @@ export class ExperienceController {
 
     //* Constructor: Inject the ExperienceService to handle business logic
     constructor(
-        private experienceService: ExperienceService
+        private readonly experienceService: ExperienceService
     ) { }
 
     //* Handle GET requests to retrieve all experiences with optional query parameters for filtering or pagination
