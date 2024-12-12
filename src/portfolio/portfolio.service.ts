@@ -1,19 +1,21 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Portfolio } from './schemas/portfolio.schema';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Query } from 'express-serve-static-core'
 import * as mongoose from 'mongoose';
-import { title } from 'process';
-import { User } from 'src/auth/schemas/user.schema';
 import { FirebaseService } from 'src/firebase/firebase.service';
+import { Portfolio } from './entities/portofolio.entity';
+import { Like, Repository } from 'typeorm';
+import { User } from 'src/auth/entities/user.entity';
+import { CreatePortfolioDto } from './dto/create-portoflio.dto';
+import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 
 @Injectable()
 export class PortfolioService {
 
     //* Constructor for injecting the portfolio model schema
     constructor(
-        @InjectModel(Portfolio.name)
-        private portfolioModel: mongoose.Model<Portfolio>,
+        @InjectRepository(Portfolio)
+        private readonly portofolioRepository: Repository<Portfolio>,
         private readonly firebaseService: FirebaseService
     ) { }
 
@@ -31,67 +33,81 @@ export class PortfolioService {
         const skip = restPerPage * (currentPage - 1)
 
         const keyword = query.keyword ? {
-            title: {
-                $regex: query.keyword,
-                $options: 'i'
-            }
+            title: Like(`%${query.keyword}%`)
         } : {}
 
-        const portfolio = await this.portfolioModel.find({ ...keyword }).limit(restPerPage).skip(skip)
-        return portfolio
-    }
-
-    //* Create A new portfolio
-    async create(portfolio: Portfolio, user: User): Promise<Portfolio> {
-        const data = Object.assign(portfolio, { user: user._id })
-        //* Save portfolio
-        const res = await this.portfolioModel.create(portfolio)
-        return res
-    }
-
-    //* find portofolio by id
-    async findById(id: string): Promise<Portfolio> {
-        const isValidId = mongoose.isValidObjectId(id)
-
-        if (!isValidId) {
-            throw new BadRequestException("Please enter correct id");
-
-        }
-
-        const portfolio = await this.portfolioModel.findById(id)
-        if (!portfolio) {
-            throw new NotFoundException("Portoflio not found")
-        }
-        return portfolio
-    }
-
-    async updateById(id: string, portfolio: Portfolio): Promise<Portfolio> {
-        return await this.portfolioModel.findByIdAndUpdate(id, portfolio, {
-            new: true,
-            runValidators: true
+        return this.portofolioRepository.find({
+            where: keyword,
+            skip,
+            take: restPerPage
         });
     }
 
-    async deleteById(id: string): Promise<Portfolio> {
-        return await this.portfolioModel.findByIdAndDelete(id)
+    //* Create A new portfolio
+    async create(portfolioDto: CreatePortfolioDto, user: User): Promise<Portfolio> {
+        const portfolio = new Portfolio();
+
+        portfolio.description = portfolioDto.description;
+        portfolio.title = portfolioDto.title;
+        portfolio.urlPortfolio = portfolioDto.urlPortfolio;
+
+        portfolio.user = user;
+        portfolio.createdAt = new Date();
+        portfolio.updatedAt = new Date();
+
+        return this.portofolioRepository.save(portfolio);
     }
 
-    async uploadImage(id: string, file: Express.Multer.File) {
-        const portfolio = await this.portfolioModel.findById(id);
+    //* find portofolio by id
+    async findById(id: number): Promise<Portfolio> {
+        const portfolio = await this.portofolioRepository.findOne({
+            where: {
+                id
+            }
+        });
+
+        if (!portfolio) {
+            throw new NotFoundException('Portfolio not found');
+        }
+        return portfolio;
+    }
+
+    async updateById(id: number, portfolio: UpdatePortfolioDto): Promise<Portfolio> {
+        const existingPortfolio = await this.portofolioRepository.findOne({ where: { id } });
+
+        if (!existingPortfolio) {
+            throw new NotFoundException('Portfolio not found');
+        }
+
+        await this.portofolioRepository.update(id, portfolio);
+        return { ...existingPortfolio, ...portfolio };
+    }
+
+    async deleteById(id: string): Promise<void> {
+        const result = await this.portofolioRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException('Portfolio not found.');
+        }
+    }
+    async uploadImage(id: number, file: Express.Multer.File) {
+        // Correctly find the portfolio using the id
+        const portfolio = await this.portofolioRepository.findOne({ where: { id } });
 
         if (!portfolio) {
             throw new NotFoundException('Portfolio not found.');
         }
 
-        // Unggah file ke Firebase di dalam folder 'portfolio'
+        // Upload the file to Firebase in the 'portfolio' folder
         const destination = `portfolio/${file.originalname}`;
 
-        // Ubah uploadFile di FirebaseService untuk menerima buffer
+        // Upload file to Firebase (assuming the buffer method is correct for your firebaseService)
         const url = await this.firebaseService.uploadFile(file.buffer, destination);
 
-        // Simpan URL ke dalam field thumbnail
+        // Save the URL to the 'thumbnail' field of the portfolio
         portfolio.thumbnail = url;
-        await portfolio.save();
+
+        // Persist the changes to the database
+        await this.portofolioRepository.save(portfolio);
 
         return portfolio;
     }

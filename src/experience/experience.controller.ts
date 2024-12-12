@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import { ExperienceService } from './experience.service';
-import { Experience } from './schemas/experience.shema';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
-import { Query as ExpressQuery } from 'express-serve-static-core'
+import { Query as ExpressQuery } from 'express-serve-static-core';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/enums/role.enum';
 import { Throttle } from '@nestjs/throttler';
+import { Experience } from './entities/experience.entity';
 
 //* Define the ExperienceController to handle HTTP requests for experiences
 @Controller('experiences')
@@ -33,8 +33,7 @@ export class ExperienceController {
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async createExperience(
-        @Body()
-        experience: CreateExperienceDto,
+        @Body() experience: CreateExperienceDto,
         @Req() req
     ): Promise<Experience> {
         return this.experienceService.create(experience, req.user);
@@ -44,10 +43,9 @@ export class ExperienceController {
     //? @param id: The unique ID of the experience to retrieve
     @Get(':id')
     async getExperience(
-        @Param('id')
-        id: string
+        @Param('id') id: number // Use `id` as string to match the route parameter type
     ): Promise<Experience> {
-        return this.experienceService.findById(id);
+        return this.experienceService.findById(id); // Convert id to number for consistency
     }
 
     //* Handle PUT requests to update an existing experience by its ID and new data
@@ -57,12 +55,10 @@ export class ExperienceController {
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async updateExperience(
-        @Param('id')
-        id: string,
-        @Body()
-        experience: UpdateExperienceDto
+        @Param('id') id: number,
+        @Body() experience: UpdateExperienceDto
     ): Promise<Experience> {
-        return this.experienceService.updateById(id, experience);
+        return this.experienceService.updateById(id, experience); // Convert id to number
     }
 
     //* Handle DELETE requests to remove a specific experience by its ID
@@ -71,9 +67,8 @@ export class ExperienceController {
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async deleteExperience(
-        @Param('id')
-        id: string
-    ): Promise<Experience> {
-        return this.experienceService.deleteById(id);
+        @Param('id') id: number
+    ): Promise<void> { // The delete method in the service doesn't return the deleted entity
+        return this.experienceService.deleteById(id); // Pass id as string as it’s accepted in the service
     }
 }

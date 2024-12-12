@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards, UseInterceptors, ParseFilePipeBuilder, HttpStatus, UploadedFile, } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { Query as ExpressQuery } from 'express-serve-static-core'
-import { Portfolio } from './schemas/portfolio.schema';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { AuthGuard } from '@nestjs/passport';
@@ -11,6 +10,7 @@ import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
 import { memoryStorage } from 'multer';
+import { Portfolio } from './entities/portofolio.entity';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -39,7 +39,7 @@ export class PortfolioController {
     @Get(":id")
     async getPortfolio(
         @Param("id")
-        id: string
+        id: number
     ): Promise<Portfolio> {
         return this.portfolioService.findById(id)
     }
@@ -49,7 +49,7 @@ export class PortfolioController {
     @UseGuards(AuthGuard(), RolesGuard)
     async updatePortfolio(
         @Param("id")
-        id: string,
+        id: number,
         @Body()
         portfolio: UpdatePortfolioDto
     ): Promise<Portfolio> {
@@ -62,7 +62,7 @@ export class PortfolioController {
     async deletePortfolio(
         @Param("id")
         id: string
-    ): Promise<Portfolio> {
+    ): Promise<void> {
         return this.portfolioService.deleteById(id)
     }
 
@@ -71,7 +71,7 @@ export class PortfolioController {
     @UseGuards(AuthGuard(), RolesGuard)
     @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
     async uploadImage(
-        @Param('id') id: string,
+        @Param('id') id: number,
         @UploadedFile(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({

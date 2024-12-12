@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Experience } from './schemas/experience.shema';
-import * as mongoose from 'mongoose';
-import { Query } from 'express-serve-static-core'
-import { User } from '../auth/schemas/user.schema';
-
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Like } from 'typeorm'; // Import Like operator from TypeORM
+import { Experience } from './entities/experience.entity';
+import { User } from 'src/auth/entities/user.entity';
+import { Query } from 'express-serve-static-core';
+import { CreateExperienceDto } from './dto/create-experience.dto';
 // 3
 @Injectable()
 export class ExperienceService {
@@ -12,8 +12,8 @@ export class ExperienceService {
     //* Constructor for injecting the Experience model schema
     constructor(
         //* Inject the Experience model to interact with the MongoDB collection
-        @InjectModel(Experience.name)
-        private experienceModel: mongoose.Model<Experience>
+        @InjectRepository(User)
+        private readonly experienceRepository: Repository<Experience>
     ) { }
 
     //* Retrieve all experiences with optional search keyword and pagination
@@ -31,39 +31,48 @@ export class ExperienceService {
 
         //* Build the keyword filter based on the 'jobtitle', case-insensitive search
         const keyword = query.keyword ? {
-            jobtitle: {
-                $regex: query.keyword,
-                $options: 'i' //* Case-insensitive flag for regex
-            }
-        } : {};
+            jobTitle: Like(`%${query.keyword}%`)
+        } : {}; // Use the object directly if no keyword is present
 
-        //* Fetch experiences from the database with optional filtering, pagination, and skip
-        const experiences = await this.experienceModel.find({ ...keyword }).limit(resPerPage).skip(skip);
-        return experiences;
+        return this.experienceRepository.find({
+            where: keyword,  // Pass the object directly to `where`
+            skip,
+            take: resPerPage,
+        });
+
     }
 
     //* Create a new experience document in the database
     //? @param experience: the experience data to be saved
-    async create(experience: Experience, user: User): Promise<Experience> {
-        //assign user to data experience
-        const data = Object.assign(experience, { user: user._id })
-        //* Save the experience to the database
-        const res = await this.experienceModel.create(experience);
-        return res;
+    async create(experienceDto: CreateExperienceDto, user: User): Promise<Experience> {
+        const experience = new Experience();
+
+        // Map the fields from DTO to the entity
+        experience.jobTitle = experienceDto.jobtitle;
+        experience.company = experienceDto.company;
+        experience.startMonth = experienceDto.startMonth;
+        experience.finishMonth = experienceDto.finishMonth;
+        experience.overview = experienceDto.overview;
+
+        // Add user and timestamps
+        experience.user = user;  // Set the user from the request (this assumes the user is authenticated)
+        experience.createdAt = new Date();
+        experience.updatedAt = new Date();
+
+        // Save to the repository (database)
+        return this.experienceRepository.save(experience);
     }
 
     //* Find an experience by its ID
     //? @param id: the ID of the experience to retrieve
-    async findById(id: string): Promise<Experience> {
-        //* Check if the provided ID is a valid MongoDB ObjectId
-        const isValidId = mongoose.isValidObjectId(id);
-        if (!isValidId) {
-            //* Throw an error if the ID is invalid
-            throw new BadRequestException('Please enter correct id');
-        }
+    async findById(id: number): Promise<Experience> {
 
         //* Retrieve the experience document by ID
-        const experience = await this.experienceModel.findById(id);
+        const experience = await this.experienceRepository.findOne({
+            where: {
+                id
+            } // Fixing the query structure for findOne
+        });
 
         //* Throw an error if the experience is not found
         if (!experience) {
@@ -75,18 +84,22 @@ export class ExperienceService {
     //* Update an experience by its ID
     //? @param id: the ID of the experience to update
     //? @param experience: the updated experience data
-    async updateById(id: string, experience: Experience): Promise<Experience> {
-        //* Find the experience by ID and update it with the new data, return the updated document
-        return await this.experienceModel.findByIdAndUpdate(id, experience, {
-            new: true, //* Return the updated document
-            runValidators: true //* Ensure the updated data is validated
-        });
+    async updateById(id: number, experience: Partial<Experience>): Promise<Experience> {
+        const existingExperience = await this.experienceRepository.findOne({ where: { id } });
+        if (!existingExperience) {
+            throw new NotFoundException('Experience not found.');
+        }
+
+        await this.experienceRepository.update(id, experience);
+        return { ...existingExperience, ...experience };
     }
 
     //* Delete an experience by its ID
     //? @param id: the ID of the experience to delete
-    async deleteById(id: string): Promise<Experience> {
-        //* Find the experience by ID and delete it
-        return await this.experienceModel.findByIdAndDelete(id);
+    async deleteById(id: number): Promise<void> {
+        const result = await this.experienceRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException('Experience not found.');
+        }
     }
 }

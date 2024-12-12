@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ExperienceController } from './experience.controller';
 import { ExperienceService } from './experience.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ExperienceSchema } from './schemas/experience.shema';
 import { AuthModule } from 'src/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Experience } from './entities/experience.entity';
 
 
 //* Define the ExperienceModule class as a module in the NestJS application
@@ -14,7 +14,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
   imports: [
     //* Register the Experience model with its schema for database interaction
     AuthModule,
-    MongooseModule.forFeature([{ name: 'Experience', schema: ExperienceSchema }])
+    TypeOrmModule.forFeature([Experience])
   ],
 
   //* Declare the ExperienceController to handle HTTP requests related to experiences

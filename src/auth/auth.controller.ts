@@ -9,7 +9,7 @@ export class AuthController {
 
     //* Constructor: Inject the AuthService to handle authentication logic
     constructor(
-        private authService: AuthService
+        private readonly authService: AuthService
     ) { }
 
     //* Handle POST requests to sign up a new user

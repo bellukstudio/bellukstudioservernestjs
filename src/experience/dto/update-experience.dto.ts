@@ -1,5 +1,5 @@
 import { IsEmpty, IsOptional, IsString } from 'class-validator';
-import { User } from '../../auth/schemas/user.schema';
+import { User } from '../../auth/entities/user.entity';
 
 //* Define the UpdateExperienceDto class for validating experience update data
 export class UpdateExperienceDto {

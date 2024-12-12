@@ -3,15 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ExperienceModule } from './experience/experience.module';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { FirebaseService } from './firebase/firebase.service';
 import { FirebaseModule } from './firebase/firebase.module';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './auth/entities/user.entity';
 //1
 //* Define the AppModule class as the root module in the NestJS application
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3306
 @Module({
   //* Import the necessary modules
   imports: [
@@ -25,8 +26,7 @@ import { FirebaseModule } from './firebase/firebase.module';
       isGlobal: true, //* Ensures that ConfigModule is available throughout the entire application
     }),
 
-    //* Connect to the MongoDB database using the URI from environment variables
-    MongooseModule.forRoot(process.env.DB_URI),
+
 
     //* Import the ExperienceModule to manage experience-related functionality
     ExperienceModule,
@@ -40,6 +40,18 @@ import { FirebaseModule } from './firebase/firebase.module';
 
     //* Import Firebase Module
     FirebaseModule,
+
+    //* Type ORM
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.HOST,
+      port: port,
+      username: process.env.USERNAME, 
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
+      entities: [User],
+      synchronize: true,
+    }),
 
   ],
 
