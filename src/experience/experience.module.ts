@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Experience } from './entities/experience.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 
 //* Define the ExperienceModule class as a module in the NestJS application
@@ -14,7 +15,7 @@ import { Experience } from './entities/experience.entity';
   imports: [
     //* Register the Experience model with its schema for database interaction
     AuthModule,
-    TypeOrmModule.forFeature([Experience])
+    TypeOrmModule.forFeature([Experience,User])
   ],
 
   //* Declare the ExperienceController to handle HTTP requests related to experiences

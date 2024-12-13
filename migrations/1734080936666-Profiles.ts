@@ -7,7 +7,6 @@ export class Profiles1734080936666 implements MigrationInterface {
     private readonly logger = new Logger(Profiles1734080936666.name);
     public async up(queryRunner: QueryRunner): Promise<void> {
         this.logger.log('Up');
-        await queryRunner.query('UPDATE item SET public = 1');
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

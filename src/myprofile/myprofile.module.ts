@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { AuthModule } from 'src/auth/auth.module';
 import { Profile } from './entities/profile.entity';
+import { FirebaseModule } from 'src/firebase/firebase.module';
 
 @Module({
   providers: [MyprofileService, {
@@ -15,7 +16,8 @@ import { Profile } from './entities/profile.entity';
   controllers: [MyprofileController],
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([Profile])
+    TypeOrmModule.forFeature([Profile]),
+    FirebaseModule,
   ]
 })
 export class MyprofileModule { }

@@ -1,20 +1,21 @@
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
-import { User } from 'src/auth/entities/user.entity';
-import { Contact } from 'src/contact/entities/contact.entity';
-import { Education } from 'src/education/entities/education.entity';
-import { Experience } from 'src/experience/entities/experience.entity';
-import { Profile } from 'src/myprofile/entities/profile.entity';
-import { Overview } from 'src/overview/entities/overview.entity';
-import { Portfolio } from 'src/portfolio/entities/portofolio.entity';
-import { Skill } from 'src/skill/entities/skill.entity';
+
 import { DataSource } from 'typeorm';
+import { User } from './auth/entities/user.entity';
+import { Experience } from './experience/entities/experience.entity';
+import { Portfolio } from './portfolio/entities/portofolio.entity';
+import { Skill } from './skill/entities/skill.entity';
+import { Overview } from './overview/entities/overview.entity';
+import { Contact } from './contact/entities/contact.entity';
+import { Education } from './education/entities/education.entity';
+import { Profile } from './myprofile/entities/profile.entity';
 
 config();
 
 const configService = new ConfigService();
 
-export default new DataSource({
+export const AppDataSource = new DataSource({
     type: 'mysql',
     host: configService.getOrThrow('MYSQL_HOST'),
     port: configService.getOrThrow('MYSQL_PORT'),

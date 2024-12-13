@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Role } from '../enums/role.enum';
-import { Experience } from 'src/experience/entities/experience.entity';
-import { Portfolio } from 'src/portfolio/entities/portofolio.entity';
+import { Experience } from './../../experience/entities/experience.entity';
+import { Portfolio } from './../../portfolio/entities/portofolio.entity';
 
 @Entity('users')
 export class User {
