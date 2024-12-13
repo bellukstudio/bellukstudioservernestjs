@@ -26,9 +26,8 @@ export class FirebaseService {
             const bucket = admin.storage().bucket();
             const file = bucket.file(destination);
             
-            // Mengupload file dari buffer
             await file.save(fileBuffer, {
-                contentType: 'image/jpeg', // Atur tipe konten sesuai kebutuhan
+                contentType: 'image/jpeg', 
                 public: true,
                 metadata: {
                     cacheControl: 'public, max-age=31536000',

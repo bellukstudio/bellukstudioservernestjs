@@ -8,24 +8,15 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { FirebaseService } from './firebase/firebase.service';
 import { FirebaseModule } from './firebase/firebase.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './auth/entities/user.entity';
 import { SkillModule } from './skill/skill.module';
-import { Experience } from './experience/entities/experience.entity';
-import { Portfolio } from './portfolio/entities/portofolio.entity';
 import { EducationModule } from './education/education.module';
 import { ContactModule } from './contact/contact.module';
 import { OverviewModule } from './overview/overview.module';
 import { MyprofileModule } from './myprofile/myprofile.module';
-import { Skill } from './skill/entities/skill.entity';
-import { Overview } from './overview/entities/overview.entity';
-import { Profile } from './myprofile/entities/profile.entity';
-import { Education } from './education/entities/education.entity';
-import { Contact } from './contact/entities/contact.entity';
 import { DataSource } from 'typeorm';
+import { DatabaseModule } from './database/database.module';
 //1
 //* Define the AppModule class as the root module in the NestJS application
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3306
 @Module({
   //* Import the necessary modules
   imports: [
@@ -55,20 +46,7 @@ const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3306
     FirebaseModule,
 
     //* Type ORM
-    TypeOrmModule.forRoot({
-      autoLoadEntities: true,
-      type: 'mysql',
-      host: process.env.HOST,
-      port: port,
-      username: process.env.USERNAME,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
-      entities: [User, Experience, Portfolio, Skill, Overview, Profile, Education, Contact],
-      synchronize: true,
-      migrations: ['src/migrations/*.ts'],
-    }),
-
-    TypeOrmModule.forFeature([User, Experience, Portfolio, Skill, Overview, Profile, Education, Contact]),
+    DatabaseModule,
 
     //* Import the SkillModule to manage authentication functionality
     SkillModule,

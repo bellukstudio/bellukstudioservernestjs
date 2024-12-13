@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from 'src/auth/entities/user.entity';  // Assuming User is an entity in the correct path
 
-@Entity({ name: 'portfolio' })  // Define the name of the table as 'portfolio'
+@Entity({ name: 'portfolios' })  // Define the name of the table as 'portfolio'
 export class Portfolio {
     @PrimaryGeneratedColumn('uuid')
     id: string;
