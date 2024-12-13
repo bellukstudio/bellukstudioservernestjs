@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Query } from 'express-serve-static-core'
-import * as mongoose from 'mongoose';
 import { FirebaseService } from 'src/firebase/firebase.service';
 import { Portfolio } from './entities/portofolio.entity';
 import { Like, Repository } from 'typeorm';
