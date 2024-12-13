@@ -1,8 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { OverviewService } from './overview.service';
-import { Throttle } from '@nestjs/throttler';
 import { Query as ExpressQuery } from 'express-serve-static-core';
-import { Overview } from './entities/overview.entity';
 import { Role } from 'src/auth/enums/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,39 +14,43 @@ export class OverviewController {
     ) { }
 
 
-    @Throttle({ default: { limit: 1, ttl: 2000 } })
     @Get()
-    async getAllOverview(@Query() query: ExpressQuery): Promise<Overview[]> {
-        return this.overviewService.findAll(query);
+    async getAllOverview(@Query() query: ExpressQuery) {
+        const overview = await this.overviewService.findAll(query);
+        return { message: "Successfully", overview: overview }
     }
 
-    @Post()
+    @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async createOverview(@Body() overview: CreateOverviewDto): Promise<Overview> {
-        return this.overviewService.create(overview);
+    async createOverview(@Body() overviewDto: CreateOverviewDto) {
+        const overview = await this.overviewService.create(overviewDto);
+        return { message: "Successfully", overview: overview }
     }
 
 
     @Get(':id')
     async getSkill(@Param('id') id: string) {
-        return this.overviewService.findById(id);
+        const overview = await this.overviewService.findById(id);
+        return { message: "Successfully", overview: overview }
     }
 
-    @Put(':id')
+    @Put(':id/update')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async updateSkill(
         @Param('id') id: string,
-        @Body() overview: UpdateOverviewDto
-    ): Promise<Overview> {
-        return this.overviewService.updateById(id, overview);
+        @Body() overviewDto: UpdateOverviewDto
+    ) {
+        const overview = await this.overviewService.updateById(id, overviewDto);
+        return { message: "Successfully", overview: overview }
     }
 
-    @Delete(':id')
+    @Delete(':id/delete')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async deleteSkill(@Param('id') id: string): Promise<void> {
-        return this.overviewService.delete(id);
+    async deleteSkill(@Param('id') id: string) {
+        await this.overviewService.delete(id);
+        return { message: "Successfully delete overview" }
     }
 }

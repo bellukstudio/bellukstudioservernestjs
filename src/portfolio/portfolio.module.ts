@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { PortfolioController } from './portfolio.controller';
 import { AuthModule } from 'src/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { FirebaseModule } from 'src/firebase/firebase.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Portfolio } from './entities/portofolio.entity';
@@ -17,10 +15,7 @@ import { Portfolio } from './entities/portofolio.entity';
     TypeOrmModule.forFeature([Portfolio])
   ],
   //* Declare PortofolioService
-  providers: [PortfolioService, {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard
-  }],
+  providers: [PortfolioService],
   //* Declare PortfolioController
   controllers: [PortfolioController]
 })

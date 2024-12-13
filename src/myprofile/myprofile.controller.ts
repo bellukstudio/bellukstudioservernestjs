@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Param, Delete, UseGuards, Put, UseIntercep
 import { MyprofileService } from './myprofile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { Profile } from './entities/profile.entity';
-import { Throttle } from '@nestjs/throttler';
 import { Role } from 'src/auth/enums/role.enum';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,39 +13,43 @@ import { memoryStorage } from 'multer';
 export class MyprofileController {
     constructor(private readonly myprofileService: MyprofileService) { }
 
-    @Throttle({ default: { limit: 5, ttl: 60 } })
     @Get()
-    async findAll(): Promise<Profile[]> {
-        return this.myprofileService.findAll();
+    async findAll() {
+        const profile = await this.myprofileService.findAll();
+        return { message: "Successfully", profile: profile }
     }
 
-    @Post()
+    @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async create(@Body() createProfileDto: CreateProfileDto): Promise<Profile> {
-        return this.myprofileService.create(createProfileDto);
+    async create(@Body() createProfileDto: CreateProfileDto) {
+        const profile = await this.myprofileService.create(createProfileDto);
+        return { message: "Successfully", profile: profile }
     }
 
     @Get(':id')
-    async findById(@Param('id') id: string): Promise<Profile> {
-        return this.myprofileService.findById(id);
+    async findById(@Param('id') id: string) {
+        const profile = await this.myprofileService.findById(id);
+        return { message: "Successfully", profile: profile }
     }
 
-    @Put(':id')
+    @Put(':id/update')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async updateById(
         @Param('id') id: string,
         @Body() profileData: Partial<Profile>,
-    ): Promise<Profile> {
-        return this.myprofileService.updateById(id, profileData);
+    ) {
+        const profile = await this.myprofileService.updateById(id, profileData);
+        return { message: "Successfully", profile: profile }
     }
 
-    @Delete(':id')
+    @Delete(':id/delete')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async delete(@Param('id') id: string): Promise<void> {
-        return this.myprofileService.delete(id);
+    async delete(@Param('id') id: string) {
+        await this.myprofileService.delete(id);
+        return { message: "Successfully" }
     }
 
     @Put('upload/:id')
@@ -70,7 +73,8 @@ export class MyprofileController {
         )
         file: Express.Multer.File,
     ) {
-        return this.myprofileService.uploadPhoto(id, file);
+        const photo = await this.myprofileService.uploadPhoto(id, file);
+        return { message: "Successfully", photo: photo }
     }
 
 
@@ -95,6 +99,7 @@ export class MyprofileController {
         )
         file: Express.Multer.File,
     ) {
-        return this.myprofileService.uploadBackground(id, file);
+        const photo = await this.myprofileService.uploadBackground(id, file);
+        return { message: "Successfully", photo: photo }
     }
 }

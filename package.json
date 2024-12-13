@@ -20,8 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "typeorm:create-migration": "npm run typeorm -- migration:create ./migrations/%npm_config_name%",
-    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./dist/src/data-source.js",
-    "typeorm:revert-migrations": "npm run typeorm migration:revert -- -d ./src/data-source.ts"
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./dist/src/core/data-source.js",
+    "typeorm:revert-migrations": "npm run typeorm migration:revert -- -d ./dist/src/core/data-source.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -35,6 +35,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "fastify": "^5.1.0",
     "firebase-admin": "^12.7.0",
     "helmet": "^8.0.0",
     "install": "^0.13.0",

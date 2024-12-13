@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ExperienceModule } from './experience/experience.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { FirebaseService } from './firebase/firebase.service';
 import { FirebaseModule } from './firebase/firebase.module';
 import { SkillModule } from './skill/skill.module';
@@ -13,15 +11,17 @@ import { EducationModule } from './education/education.module';
 import { ContactModule } from './contact/contact.module';
 import { OverviewModule } from './overview/overview.module';
 import { MyprofileModule } from './myprofile/myprofile.module';
-import { DataSource } from 'typeorm';
 import { DatabaseModule } from './database/database.module';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseApiInterceptor } from './core/interceptors/response-api.interceptor';
+import { AllExceptionsFilter } from './core/filters/all-exception.filter';
 //1
 //* Define the AppModule class as the root module in the NestJS application
 @Module({
   //* Import the necessary modules
   imports: [
     ThrottlerModule.forRoot([{
-      ttl: 60000,
+      ttl: 60,
       limit: 10,
     }]),
     //* Load the ConfigModule to handle environment variables, specifying the .env file and making it globally accessible
@@ -61,13 +61,20 @@ import { DatabaseModule } from './database/database.module';
 
   ],
 
-  //* Declare the AppController to handle incoming requests
-  controllers: [AppController],
 
   //* Declare the AppService to provide core application services
-  providers: [AppService, FirebaseService],
+  providers: [FirebaseService, 
+    {
+    provide: APP_INTERCEPTOR, useClass: ResponseApiInterceptor
+    },
+    {
+      provide: APP_FILTER, useClass: AllExceptionsFilter
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 //* Export the AppModule class
-export class AppModule {
-  constructor(private readonly dataSource: DataSource) { }
-}
+export class AppModule { }

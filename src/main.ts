@@ -9,6 +9,7 @@ import { DataSource } from 'typeorm';
 async function bootstrap() {
   //* Create a NestJS application instance using AppModule
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix("api")
   app.use(helmet());
   app.enableCors({
     origin: ['http://localhost:3012'],

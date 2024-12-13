@@ -12,7 +12,7 @@ export class ExperienceService {
     //* Constructor for injecting the Experience model schema
     constructor(
         //* Inject the Experience model to interact with the MongoDB collection
-        @InjectRepository(User)
+        @InjectRepository(Experience)
         private readonly experienceRepository: Repository<Experience>
     ) { }
 
@@ -65,7 +65,7 @@ export class ExperienceService {
 
     //* Find an experience by its ID
     //? @param id: the ID of the experience to retrieve
-    async findById(id: number): Promise<Experience> {
+    async findById(id: string): Promise<Experience> {
 
         //* Retrieve the experience document by ID
         const experience = await this.experienceRepository.findOne({
@@ -84,7 +84,7 @@ export class ExperienceService {
     //* Update an experience by its ID
     //? @param id: the ID of the experience to update
     //? @param experience: the updated experience data
-    async updateById(id: number, experience: Partial<Experience>): Promise<Experience> {
+    async updateById(id: string, experience: Partial<Experience>): Promise<Experience> {
         const existingExperience = await this.experienceRepository.findOne({ where: { id } });
         if (!existingExperience) {
             throw new NotFoundException('Experience not found.');
@@ -96,7 +96,7 @@ export class ExperienceService {
 
     //* Delete an experience by its ID
     //? @param id: the ID of the experience to delete
-    async deleteById(id: number): Promise<void> {
+    async deleteById(id: string): Promise<void> {
         const result = await this.experienceRepository.delete(id);
         if (result.affected === 0) {
             throw new NotFoundException('Experience not found.');

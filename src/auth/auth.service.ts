@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity'; // Entitas User TypeORM
@@ -22,7 +22,12 @@ export class AuthService {
         //* Check if the email already exists
         const existingUser = await this.userRepository.findOne({ where: { email } });
         if (existingUser) {
-            throw new ConflictException('Duplicate Email Entered');
+            // Menggunakan HttpException untuk menyesuaikan format error
+            throw new HttpException({
+                message: 'Duplicate Email Entered',
+                error: 'Conflict',
+                statusCode: HttpStatus.CONFLICT,
+            }, HttpStatus.CONFLICT);
         }
 
         //* Hash the user's password
@@ -54,7 +59,11 @@ export class AuthService {
 
         //* Throw an exception if the user is not found
         if (!user) {
-            throw new UnauthorizedException('Invalid email or password');
+            throw new HttpException({
+                message: 'Invalid email or password',
+                error: 'Unauthorized',
+                statusCode: HttpStatus.UNAUTHORIZED,
+            }, HttpStatus.UNAUTHORIZED);
         }
 
         //* Compare the provided password with the hashed password stored in the database
@@ -62,7 +71,11 @@ export class AuthService {
 
         //* Throw an exception if the password does not match
         if (!isPasswordMatched) {
-            throw new UnauthorizedException('Invalid email or password');
+            throw new HttpException({
+                message: 'Invalid email or password',
+                error: 'Unauthorized',
+                statusCode: HttpStatus.UNAUTHORIZED,
+            }, HttpStatus.UNAUTHORIZED);
         }
 
         //* Generate a JWT token for the authenticated user

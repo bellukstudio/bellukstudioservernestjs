@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ExperienceController } from './experience.controller';
 import { ExperienceService } from './experience.service';
 import { AuthModule } from 'src/auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Experience } from './entities/experience.entity';
 import { User } from 'src/auth/entities/user.entity';
@@ -15,17 +13,14 @@ import { User } from 'src/auth/entities/user.entity';
   imports: [
     //* Register the Experience model with its schema for database interaction
     AuthModule,
-    TypeOrmModule.forFeature([Experience,User])
+    TypeOrmModule.forFeature([Experience, User])
   ],
 
   //* Declare the ExperienceController to handle HTTP requests related to experiences
   controllers: [ExperienceController],
 
   //* Declare the ExperienceService to handle business logic for managing experiences
-  providers: [ExperienceService, {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard
-  }],
+  providers: [ExperienceService],
 })
 //* Export the ExperienceModule class
 export class ExperienceModule { }

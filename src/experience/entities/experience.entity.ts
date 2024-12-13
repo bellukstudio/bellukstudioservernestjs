@@ -5,9 +5,8 @@ import { User } from '../../auth/entities/user.entity';
 @Entity('experiences') // Nama tabel database
 export class Experience {
     //* Primary key: Unique identifier for each experience
-    @PrimaryGeneratedColumn()
-    id: number;
-
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
     //* Job title of the experience
     @Column()
     jobTitle: string;

@@ -6,7 +6,6 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Throttle } from '@nestjs/throttler';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 
 @Controller('education')
@@ -15,42 +14,46 @@ export class EducationController {
 
     // Retrieve all education records
 
-    @Throttle({ default: { limit: 1, ttl: 2000 } })
     @Get()
-    async findAll(@Query() query: ExpressQuery): Promise<Education[]> {
-        return this.educationService.findAll(query);
+    async findAll(@Query() query: ExpressQuery) {
+        const education = await this.educationService.findAll(query);
+        return { message: "Successfully", education: education }
     }
 
     // Create a new education record
-    @Post()
+    @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async create(@Body() createEducationDto: CreateEducationDto): Promise<Education> {
-        return this.educationService.create(createEducationDto);
+    async create(@Body() createEducationDto: CreateEducationDto) {
+        const education = await this.educationService.create(createEducationDto);
+        return { message: "Successfully", education: education }
     }
 
     // Find an education record by ID
     @Get(':id')
-    async findById(@Param('id') id: string): Promise<Education> {
-        return this.educationService.findById(id);
+    async findById(@Param('id') id: string) {
+        const education = await this.educationService.findById(id);
+        return { message: "Successfully", education: education }
     }
 
     // Update an education record by ID
-    @Put(':id')
+    @Put(':id/update')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async updateById(
         @Param('id') id: string,
         @Body() educationData: Partial<Education>,
-    ): Promise<Education> {
-        return this.educationService.updateById(id, educationData);
+    ) {
+        const education = await this.educationService.updateById(id, educationData);
+        return { message: "Successfully", education: education }
     }
 
     // Delete an education record by ID
-    @Delete(':id')
+    @Delete(':id/delete')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async delete(@Param('id') id: string): Promise<void> {
-        return this.educationService.delete(id);
+    async delete(@Param('id') id: string) {
+        await this.educationService.delete(id);
+        return { message: "Successfully delete education" }
     }
 }
