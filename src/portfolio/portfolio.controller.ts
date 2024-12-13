@@ -39,7 +39,7 @@ export class PortfolioController {
     @Get(":id")
     async getPortfolio(
         @Param("id")
-        id: number
+        id: string
     ): Promise<Portfolio> {
         return this.portfolioService.findById(id)
     }
@@ -49,7 +49,7 @@ export class PortfolioController {
     @UseGuards(AuthGuard(), RolesGuard)
     async updatePortfolio(
         @Param("id")
-        id: number,
+        id: string,
         @Body()
         portfolio: UpdatePortfolioDto
     ): Promise<Portfolio> {
@@ -71,7 +71,7 @@ export class PortfolioController {
     @UseGuards(AuthGuard(), RolesGuard)
     @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
     async uploadImage(
-        @Param('id') id: number,
+        @Param('id') id: string,
         @UploadedFile(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({

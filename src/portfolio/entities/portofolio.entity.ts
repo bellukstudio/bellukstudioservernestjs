@@ -3,8 +3,8 @@ import { User } from 'src/auth/entities/user.entity';  // Assuming User is an en
 
 @Entity({ name: 'portfolio' })  // Define the name of the table as 'portfolio'
 export class Portfolio {
-    @PrimaryGeneratedColumn()  // Automatically generates an ID column
-    id: number;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
     @Column()  // Maps to the title column
     title: string;

@@ -59,7 +59,7 @@ export class PortfolioService {
     }
 
     //* find portofolio by id
-    async findById(id: number): Promise<Portfolio> {
+    async findById(id: string): Promise<Portfolio> {
         const portfolio = await this.portofolioRepository.findOne({
             where: {
                 id
@@ -72,7 +72,7 @@ export class PortfolioService {
         return portfolio;
     }
 
-    async updateById(id: number, portfolio: UpdatePortfolioDto): Promise<Portfolio> {
+    async updateById(id: string, portfolio: UpdatePortfolioDto): Promise<Portfolio> {
         const existingPortfolio = await this.portofolioRepository.findOne({ where: { id } });
 
         if (!existingPortfolio) {
@@ -89,7 +89,7 @@ export class PortfolioService {
             throw new NotFoundException('Portfolio not found.');
         }
     }
-    async uploadImage(id: number, file: Express.Multer.File) {
+    async uploadImage(id: string, file: Express.Multer.File) {
         // Correctly find the portfolio using the id
         const portfolio = await this.portofolioRepository.findOne({ where: { id } });
 
