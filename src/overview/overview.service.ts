@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Overview } from './entities/overview.entity';
 import { Query } from 'express-serve-static-core';
@@ -40,7 +40,11 @@ export class OverviewService {
         });
 
         if (!overview) {
-            throw new NotFoundException('Overview not found');
+            throw new HttpException({
+                message: 'Overview not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return overview;
     }
@@ -50,7 +54,11 @@ export class OverviewService {
         });
 
         if (!existingOverview) {
-            throw new NotFoundException('Overivew not found');
+            throw new HttpException({
+                message: 'Overview not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.overviewRepository.update(id, overview);
@@ -61,7 +69,11 @@ export class OverviewService {
         const result = await this.overviewRepository.delete(id);
 
         if (result.affected == 0) {
-            throw new NotFoundException('Overview not found');
+            throw new HttpException({
+                message: 'Overview not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -7,7 +7,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/auth/enums/role.enum';
-import { Experience } from './entities/experience.entity';
 
 //* Define the ExperienceController to handle HTTP requests for experiences
 @Controller('experiences')

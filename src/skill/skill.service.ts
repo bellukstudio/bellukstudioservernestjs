@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Skill } from './entities/skill.entity';
 import { Like, Repository } from 'typeorm';
@@ -47,7 +47,11 @@ export class SkillService {
         });
 
         if (!skill) {
-            throw new NotFoundException('Skill not found');
+            throw new HttpException({
+                message: 'Skill not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return skill;
     }
@@ -57,7 +61,11 @@ export class SkillService {
         });
 
         if (!existingSkill) {
-            throw new NotFoundException('Skill not found');
+            throw new HttpException({
+                message: 'Skill not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.skillRepository.update(id, skill);
@@ -66,7 +74,11 @@ export class SkillService {
     async deleteById(id: string): Promise<void> {
         const result = await this.skillRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException('Skill not found');
+            throw new HttpException({
+                message: 'Skill not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
 }

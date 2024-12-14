@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm'; // Import Like operator from TypeORM
 import { Experience } from './entities/experience.entity';
@@ -76,7 +76,11 @@ export class ExperienceService {
 
         //* Throw an error if the experience is not found
         if (!experience) {
-            throw new NotFoundException('Experience not found');
+            throw new HttpException({
+                message: 'Experience not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return experience;
     }
@@ -87,7 +91,11 @@ export class ExperienceService {
     async updateById(id: string, experience: Partial<Experience>): Promise<Experience> {
         const existingExperience = await this.experienceRepository.findOne({ where: { id } });
         if (!existingExperience) {
-            throw new NotFoundException('Experience not found.');
+            throw new HttpException({
+                message: 'Experience not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.experienceRepository.update(id, experience);
@@ -99,7 +107,11 @@ export class ExperienceService {
     async deleteById(id: string): Promise<void> {
         const result = await this.experienceRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException('Experience not found.');
+            throw new HttpException({
+                message: 'Experience not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
 }

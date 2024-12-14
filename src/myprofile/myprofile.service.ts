@@ -1,5 +1,5 @@
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from './entities/profile.entity';
 import { Repository } from 'typeorm';
@@ -28,7 +28,11 @@ export class MyprofileService {
         const profile = await this.profileRepository.findOne({ where: { id } });
 
         if (!profile) {
-            throw new NotFoundException('Profile not found');
+            throw new HttpException({
+                message: 'Profile not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return profile;
     }
@@ -37,7 +41,11 @@ export class MyprofileService {
         const existingProfile = await this.profileRepository.findOne({ where: { id } });
 
         if (!existingProfile) {
-            throw new NotFoundException('Profile not found');
+            throw new HttpException({
+                message: 'Profile not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.profileRepository.update(id, profileData);
@@ -49,7 +57,11 @@ export class MyprofileService {
         const result = await this.profileRepository.delete(id);
 
         if (result.affected === 0) {
-            throw new NotFoundException('Profile not found');
+            throw new HttpException({
+                message: 'Profile not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -58,7 +70,11 @@ export class MyprofileService {
         const profile = await this.profileRepository.findOne({ where: { id } });
 
         if (!profile) {
-            throw new NotFoundException('Profile not found.');
+            throw new HttpException({
+                message: 'Profile not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         // Upload the file to Firebase in the 'portfolio' folder
@@ -81,7 +97,11 @@ export class MyprofileService {
         const profile = await this.profileRepository.findOne({ where: { id } });
 
         if (!profile) {
-            throw new NotFoundException('Profile not found.');
+            throw new HttpException({
+                message: 'Profile not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         // Upload the file to Firebase in the 'portfolio' folder

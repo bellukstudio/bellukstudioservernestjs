@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateContactDto } from './dto/create-contact.dto';
@@ -36,7 +36,11 @@ export class ContactService {
         });
 
         if (!contact) {
-            throw new NotFoundException('Contact not found');
+            throw new HttpException({
+                message: 'Contact not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return contact;
     }
@@ -48,7 +52,11 @@ export class ContactService {
         });
 
         if (!existingContact) {
-            throw new NotFoundException('Contact not found');
+            throw new HttpException({
+                message: 'Contact not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.contactRepository.update(id, contactData);
@@ -61,7 +69,11 @@ export class ContactService {
         const result = await this.contactRepository.delete(id);
 
         if (result.affected === 0) {
-            throw new NotFoundException('Contact not found');
+            throw new HttpException({
+                message: 'Contact not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
 }

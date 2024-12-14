@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Education } from './entities/education.entity';
 import { Like, Repository } from 'typeorm';
@@ -42,7 +42,11 @@ export class EducationService {
         const education = await this.educationRepository.findOne({ where: { id } });
 
         if (!education) {
-            throw new NotFoundException('Education not found');
+            throw new HttpException({
+                message: 'Education not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return education;
     }
@@ -52,7 +56,11 @@ export class EducationService {
         const existingEducation = await this.educationRepository.findOne({ where: { id } });
 
         if (!existingEducation) {
-            throw new NotFoundException('Education not found');
+            throw new HttpException({
+                message: 'Education not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.educationRepository.update(id, educationData);
@@ -65,7 +73,11 @@ export class EducationService {
         const result = await this.educationRepository.delete(id);
 
         if (result.affected === 0) {
-            throw new NotFoundException('Education not found');
+            throw new HttpException({
+                message: 'Education not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
 }

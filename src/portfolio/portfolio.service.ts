@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Query } from 'express-serve-static-core'
 import { FirebaseService } from 'src/firebase/firebase.service';
@@ -66,7 +66,11 @@ export class PortfolioService {
         });
 
         if (!portfolio) {
-            throw new NotFoundException('Portfolio not found');
+            throw new HttpException({
+                message: 'Portofolio not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
         return portfolio;
     }
@@ -75,7 +79,11 @@ export class PortfolioService {
         const existingPortfolio = await this.portofolioRepository.findOne({ where: { id } });
 
         if (!existingPortfolio) {
-            throw new NotFoundException('Portfolio not found');
+            throw new HttpException({
+                message: 'Portofolio not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         await this.portofolioRepository.update(id, portfolio);
@@ -85,7 +93,11 @@ export class PortfolioService {
     async deleteById(id: string): Promise<void> {
         const result = await this.portofolioRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException('Portfolio not found.');
+            throw new HttpException({
+                message: 'Portofolio not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
     }
     async uploadImage(id: string, file: Express.Multer.File) {
@@ -93,7 +105,11 @@ export class PortfolioService {
         const portfolio = await this.portofolioRepository.findOne({ where: { id } });
 
         if (!portfolio) {
-            throw new NotFoundException('Portfolio not found.');
+            throw new HttpException({
+                message: 'Portofolio not found',
+                error: 'Not Found',
+                statusCode: HttpStatus.NOT_FOUND,
+            }, HttpStatus.NOT_FOUND);
         }
 
         // Upload the file to Firebase in the 'portfolio' folder
