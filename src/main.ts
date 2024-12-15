@@ -9,10 +9,11 @@ import { DataSource } from 'typeorm';
 async function bootstrap() {
   //* Create a NestJS application instance using AppModule
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix("api")
+  app.setGlobalPrefix("api")  
   app.use(helmet());
   app.enableCors({
-    origin: ['http://localhost:3012'],
+    origin: '*',
+    credentials: true,
   });
   //* Apply a global validation pipe to automatically validate incoming requests
   app.useGlobalPipes(new ValidationPipe());
