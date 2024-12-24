@@ -26,7 +26,7 @@ export class PortfolioService {
         const restPerPage = 10;
 
         //* Determine the current page, default to 1 if not specified
-        const currentPage = Number(query.page)
+        const currentPage = Number(query.page) || 1;
 
         //* calculate th enumber of documents to skip based on the current page
         const skip = restPerPage * (currentPage - 1)
