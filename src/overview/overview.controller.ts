@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipeBuilder, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { OverviewService } from './overview.service';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { Role } from 'src/auth/enums/role.enum';
@@ -7,6 +7,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CreateOverviewDto } from './dto/create-overview.dto';
 import { UpdateOverviewDto } from './dto/update-overview.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 @Controller('overview')
 export class OverviewController {
     constructor(
@@ -52,5 +54,30 @@ export class OverviewController {
     async deleteSkill(@Param('id') id: string) {
         await this.overviewService.delete(id);
         return { message: "Successfully delete overview" }
+    }
+
+    @Put('upload/:id')
+    @Roles(Role.Admin)
+    @UseGuards(AuthGuard(), RolesGuard)
+    @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
+    async uploadImage(
+        @Param('id') id: string,
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: /(jpg|jpeg|png)$/,
+                })
+                .addMaxSizeValidator({
+                    maxSize: 5 * 1024 * 1024,
+                    message: 'File size must be less than 1MB',
+                })
+                .build({
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                }),
+        )
+        file: Express.Multer.File,
+    ) {
+        const upload = await this.overviewService.uploadPhoto(id, file);
+        return { message: "Successfully", photo: upload }
     }
 }

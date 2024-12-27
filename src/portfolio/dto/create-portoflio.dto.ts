@@ -1,4 +1,4 @@
-import { IsEmpty, IsNotEmpty, IsString } from "class-validator";
+import { IsEmpty, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { User } from "src/auth/entities/user.entity";
 
 
@@ -15,6 +15,10 @@ export class CreatePortfolioDto{
     @IsNotEmpty()
     @IsString()
     readonly urlPortfolio:string
+
+    @IsOptional()
+    @IsString()
+    readonly urlGithub:string
 
     @IsEmpty({ message: 'You cannot pass user id' })
     readonly user: User

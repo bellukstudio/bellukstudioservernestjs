@@ -12,8 +12,11 @@ export class Portfolio {
     @Column()  // Maps to the description column
     description: string;
 
-    @Column()  // Maps to the URL portfolio column
-    urlPortfolio: string;
+    @Column({ nullable: true })  // Maps to the URL portfolio column
+    urlPortfolio?: string;
+
+    @Column({ nullable: true })  // Maps to the URL portfolio column
+    urlGithub: string;
 
     @Column({ nullable: true })  // Maps to the optional thumbnail column, nullable if not provided
     thumbnail?: string;

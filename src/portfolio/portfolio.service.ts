@@ -44,15 +44,7 @@ export class PortfolioService {
 
     //* Create A new portfolio
     async create(portfolioDto: CreatePortfolioDto, user: User): Promise<Portfolio> {
-        const portfolio = new Portfolio();
-
-        portfolio.description = portfolioDto.description;
-        portfolio.title = portfolioDto.title;
-        portfolio.urlPortfolio = portfolioDto.urlPortfolio;
-
-        portfolio.user = user;
-        portfolio.createdAt = new Date();
-        portfolio.updatedAt = new Date();
+        const portfolio = this.portofolioRepository.create(portfolioDto);
 
         return this.portofolioRepository.save(portfolio);
     }

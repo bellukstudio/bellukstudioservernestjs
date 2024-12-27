@@ -64,7 +64,7 @@ export class MyprofileController {
                     fileType: /(jpg|jpeg|png)$/,
                 })
                 .addMaxSizeValidator({
-                    maxSize: 1 * 1024 * 1024,
+                    maxSize: 5 * 1024 * 1024,
                     message: 'File size must be less than 1MB',
                 })
                 .build({
@@ -90,7 +90,7 @@ export class MyprofileController {
                     fileType: /(jpg|jpeg|png)$/,
                 })
                 .addMaxSizeValidator({
-                    maxSize: 1 * 1024 * 1024,
+                    maxSize: 5 * 1024 * 1024,
                     message: 'File size must be less than 1MB',
                 })
                 .build({

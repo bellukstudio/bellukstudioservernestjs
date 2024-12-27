@@ -1,20 +1,23 @@
-import { IsEmpty, IsNotEmpty, IsString } from "class-validator"
+import { IsEmpty, IsNotEmpty, IsOptional, IsString } from "class-validator"
 import { User } from "src/auth/entities/user.entity"
 
 
-export class UpdatePortfolioDto{
+export class UpdatePortfolioDto {
     @IsNotEmpty()
     @IsString()
-    readonly title:string
+    readonly title: string
 
     @IsNotEmpty()
     @IsString()
-    readonly description:string
+    readonly description: string
 
     @IsNotEmpty()
     @IsString()
-    readonly urlPortfolio:string
+    readonly urlPortfolio: string
 
+    @IsOptional()
+    @IsString()
+    readonly urlGithub: string
 
     @IsEmpty({ message: 'You cannot pass user id' })
     readonly user: User
