@@ -27,26 +27,35 @@ export class OverviewService {
         });
     }
 
+    async getSingleData(): Promise<Overview> {
+        const overview = await this.overviewRepository.query("SELECT * FROM overviews LIMIT 1")
+        return overview[0];
+    }
+
+
     async create(overviewDto: CreateOverviewDto): Promise<Overview> {
         const overview = this.overviewRepository.create(overviewDto);
         return this.overviewRepository.save(overview);
     }
     async findById(id: string): Promise<Overview> {
-        const overview = await this.overviewRepository.findOne({
+        const overviewById = await this.overviewRepository.findOne({
             where: {
                 id
             }
         });
 
-        if (!overview) {
+        if (!overviewById) {
             throw new HttpException({
-                message: 'Overview not found',
+                message: 'Overview not founds',
                 error: 'Not Found',
                 statusCode: HttpStatus.NOT_FOUND,
             }, HttpStatus.NOT_FOUND);
         }
-        return overview;
+        return overviewById;
     }
+
+
+
     async updateById(id: string, overview: Partial<Overview>): Promise<Overview> {
         const existingOverview = await this.overviewRepository.findOne({
             where: { id }

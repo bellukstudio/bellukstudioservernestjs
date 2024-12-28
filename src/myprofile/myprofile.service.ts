@@ -19,6 +19,11 @@ export class MyprofileService {
         return this.profileRepository.find();
     }
 
+    async getSingleData(): Promise<Profile> {
+        const profile = await this.profileRepository.query("SELECT * FROM profiles LIMIT 1");
+        return profile[0]
+    }
+
     async create(createProfileDto: CreateProfileDto): Promise<Profile> {
         const profile = this.profileRepository.create(createProfileDto);
         return this.profileRepository.save(profile);

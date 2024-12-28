@@ -19,6 +19,12 @@ export class MyprofileController {
         return { message: "Successfully", profile: profile }
     }
 
+    @Get('/getSingle')
+    async getSingleOverview() {
+        const profile = await this.myprofileService.getSingleData();
+        return { message: "Successfully", profile: profile}
+    }
+
     @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)

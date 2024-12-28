@@ -22,6 +22,12 @@ export class OverviewController {
         return { message: "Successfully", overview: overview }
     }
 
+    @Get('/getSingle')
+    async getSingleOverview() {
+        const overview = await this.overviewService.getSingleData();
+        return { message: "Successfully", overview: overview }
+    }
+
     @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
@@ -32,7 +38,7 @@ export class OverviewController {
 
 
     @Get(':id')
-    async getSkill(@Param('id') id: string) {
+    async getOverivew(@Param('id') id: string) {
         const overview = await this.overviewService.findById(id);
         return { message: "Successfully", overview: overview }
     }
@@ -40,7 +46,7 @@ export class OverviewController {
     @Put(':id/update')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async updateSkill(
+    async updateOverview(
         @Param('id') id: string,
         @Body() overviewDto: UpdateOverviewDto
     ) {
@@ -51,7 +57,7 @@ export class OverviewController {
     @Delete(':id/delete')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async deleteSkill(@Param('id') id: string) {
+    async deleteOverview(@Param('id') id: string) {
         await this.overviewService.delete(id);
         return { message: "Successfully delete overview" }
     }
