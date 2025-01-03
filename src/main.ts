@@ -22,7 +22,7 @@ async function bootstrap() {
   await dataSource.runMigrations();
 
   //* Make the application listen on port 3000
-  await app.listen(3012);
+  await app.listen(3000);
 }
 
 //* Call the bootstrap function to start the NestJS application
