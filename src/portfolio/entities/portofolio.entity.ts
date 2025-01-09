@@ -9,7 +9,7 @@ export class Portfolio {
     @Column()  // Maps to the title column
     title: string;
 
-    @Column()  // Maps to the description column
+    @Column({ type:'text'})  // Maps to the description column
     description: string;
 
     @Column({ nullable: true })  // Maps to the URL portfolio column
