@@ -25,5 +25,6 @@ async function bootstrap() {
   await app.listen(3005);
 }
 
-//* Call the bootstrap function to start the NestJS application
+//* Call the bootstrap function to start the NestJS application 
+//* and listen on port 3000
 bootstrap();
