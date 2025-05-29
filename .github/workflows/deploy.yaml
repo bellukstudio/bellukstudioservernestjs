@@ -20,6 +20,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
+            git config --global --add safe.directory /var/www/myapi-app.***.my.id
             cd /var/www/myapi-app.bellukstudio.my.id
             git pull origin main
             docker compose down

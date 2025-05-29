@@ -11,7 +11,7 @@ services:
     ports:
       - 3306:3306  
     volumes:
-      - mysql_data: /var/lib/mysql
+      - mysql-data:/var/lib/mysql
     networks:
       - nest-network 
 
@@ -45,9 +45,8 @@ services:
       - nest-network         
 
 volumes:
-  mysql_data:    
+  mysql-data:    
 
 networks:
   nest-network:
     driver: bridge
-    
