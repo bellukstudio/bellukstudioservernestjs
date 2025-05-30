@@ -33,10 +33,11 @@ jobs:
 
             echo "🚀 Run new container..."
             docker run -d \
-              --name myapi-app \
-              -p 3005:3005 \
-              -v /var/www/myapi-app.bellukstudio.my.id/config:/app/config \
-              -e FIREBASE_CONFIG_PATH=/app/config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json \
+            --name myapi-app \
+            -p 3005:3005 \
+            -v /var/www/myapi-app.bellukstudio.my.id/config:/app/config \
+            --env-file /var/www/myapi-app.bellukstudio.my.id/.env \
+            -e FIREBASE_CONFIG_PATH=/app/config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json \
               myapi-app
 
             echo "✅ Done"
