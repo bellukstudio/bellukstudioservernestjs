@@ -10,6 +10,7 @@ RUN apk add --no-cache python3 make g++
 # Install dependencies
 COPY package.json package-lock.json ./
 
+
 # Copy Firebase credential file into the image
 COPY config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json /app/config/
 
@@ -44,7 +45,7 @@ RUN apk add --no-cache libstdc++
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/package.json /app
-
+COPY --from=builder /app/config /app/config
 # Expose port
 EXPOSE 3005
 
