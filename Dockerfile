@@ -14,6 +14,9 @@ COPY package.json package-lock.json ./
 # Copy Firebase credential file into the image
 COPY config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json /app/config/
 
+# Copy environment variables
+COPY .env .env
+
 # Install dependencies
 RUN npm ci
 
