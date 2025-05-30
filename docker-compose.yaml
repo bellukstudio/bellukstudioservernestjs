@@ -17,7 +17,7 @@ services:
 
   myapi-bellukstudio:
     build: .
-    container_name: myapi
+    container_name: myapi-app
     restart: always
     depends_on:
       - mysql
