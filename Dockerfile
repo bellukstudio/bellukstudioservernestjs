@@ -49,5 +49,5 @@ COPY --from=builder /app/config /app/config
 # Expose port
 EXPOSE 3005
 
-# Start the app
+# Start the app1
 CMD ["node", "dist/src/main.js"]
