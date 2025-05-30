@@ -35,7 +35,7 @@ ENV NODE_ENV=production
 ENV PORT=3005
 ENV HOST=0.0.0.0
 # Set ENV so NestJS can read it
-ENV FIREBASE_CONFIG_PATH=/app/config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json
+ENV FIREBASE_CONFIG_PATH=config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json
 
 # Install runtime dependencies needed for native modules
 RUN apk add --no-cache libstdc++

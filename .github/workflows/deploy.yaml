@@ -20,16 +20,23 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            git config --global --add safe.directory /var/www/myapi-app.***.my.id
+            git config --global --add safe.directory /var/www/myapi-app.bellukstudio.my.id
             cd /var/www/myapi-app.bellukstudio.my.id
             git pull origin main
-
-            echo "🐳 Build Docker image..."
-            docker build -t myapi-app .
 
             echo "🧼 Stop and remove old container..."
             docker stop myapi-app || true
             docker rm myapi-app || true
 
+            echo "🐳 Build Docker image..."
+            docker build -t myapi-app .
+
             echo "🚀 Run new container..."
-            docker run -d --name myapi-app -p 3005:3005 myapi-app
+            docker run -d \
+              --name myapi-app \
+              -p 3005:3005 \
+              -v /var/www/myapi-app.bellukstudio.my.id/config:/app/config \
+              -e FIREBASE_CONFIG_PATH=/app/config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json \
+              myapi-app
+
+            echo "✅ Done"
