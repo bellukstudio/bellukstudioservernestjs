@@ -9,6 +9,11 @@ RUN apk add --no-cache python3 make g++
 
 # Install dependencies
 COPY package.json package-lock.json ./
+
+# Copy Firebase credential file into the image
+COPY config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json /app/config/
+
+# Install dependencies
 RUN npm ci
 
 # Copy source code
@@ -29,6 +34,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3005
 ENV HOST=0.0.0.0
+# Set ENV so NestJS can read it
+ENV FIREBASE_CONFIG_PATH=/app/config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json
 
 # Install runtime dependencies needed for native modules
 RUN apk add --no-cache libstdc++
