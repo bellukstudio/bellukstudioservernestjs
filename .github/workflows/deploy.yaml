@@ -1,21 +1,21 @@
 name: Deploy to VPS
 
 on:
-  push: 
+  push:
     branches:
       - main
 
-jobs: 
+jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
-        with: 
+        with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
@@ -23,5 +23,13 @@ jobs:
             git config --global --add safe.directory /var/www/myapi-app.***.my.id
             cd /var/www/myapi-app.bellukstudio.my.id
             git pull origin main
-            docker compose down
-            docker compose up --build -d  
+
+            echo "🐳 Build Docker image..."
+            docker build -t myapi-app .
+
+            echo "🧼 Stop and remove old container..."
+            docker stop myapi-app || true
+            docker rm myapi-app || true
+
+            echo "🚀 Run new container..."
+            docker run -d --name myapi-app -p 3005:3005 myapi-app
