@@ -42,4 +42,4 @@ COPY --from=builder /app/package.json /app
 EXPOSE 3005
 
 # Start the app
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
