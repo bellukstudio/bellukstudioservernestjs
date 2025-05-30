@@ -15,7 +15,7 @@ services:
     networks:
       - nest-network 
 
-  myapi-bellukstudio:
+  myapi-app:
     build: .
     container_name: myapi-app
     restart: always
