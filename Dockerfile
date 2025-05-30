@@ -33,5 +33,5 @@ RUN apk add --no-cache libstdc++
 # Expose the port NestJS runs on
 EXPOSE 3005
 
-# Run the app 1
+# Run the app 
 CMD ["node", "dist/main.js"]
