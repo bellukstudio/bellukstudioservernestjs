@@ -16,7 +16,9 @@ services:
       - nest-network 
 
   myapi-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: myapi-app
     restart: always
     depends_on:
