@@ -35,12 +35,17 @@ services:
 
   # phpmyadmin tidak digunakan untuk PostgreSQL
   # Gunakan adminer sebagai alternatif:
-  adminer:
-    image: adminer
-    container_name: adminer_myapi
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_myapi
     restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bellukstudio.my.id
+      PGADMIN_DEFAULT_PASSWORD: BellukStudio123.
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8080:80"
+    depends_on:
+      - postgres
     networks:
       - nest-network
 
