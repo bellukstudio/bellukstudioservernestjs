@@ -21,16 +21,17 @@ services:
       dockerfile: Dockerfile
     container_name: myapi-app
     restart: always
-    # depends_on:
-    #   - postgres
+    ports:
+      - 3005:3005
+    volumes:
+      - ./config:/app/config
     env_file:
       - .env
-    ports:
-      - 3005:3005  
-    volumes:
-      - .:/app
+    environment:
+      FIREBASE_CONFIG_PATH: /app/config/portofolio-2a917-firebase-adminsdk-vd2a7-e2dd0a7e93.json
     networks:
       - bellukstudio_network
+
 
   # pgadmin:
   #   image: dpage/pgadmin4
