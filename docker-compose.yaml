@@ -15,11 +15,11 @@ services:
   #   networks:
   #     - nest-network
 
-  myapi-app:
+  myapi_app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: myapi-app
+    container_name: myapi_app
     restart: always
     ports:
       - 3005:3005
