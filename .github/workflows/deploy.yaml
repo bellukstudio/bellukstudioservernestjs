@@ -20,8 +20,16 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
-            git config --global --add safe.directory /home/bellukstudio/projects/myapi-app.bellukstudio.my.id
             cd /home/bellukstudio/projects/myapi-app.bellukstudio.my.id
+            # Debug current state
+            echo "Current user: $(whoami)"
+            echo "Directory owner: $(ls -la . | head -2)"
+            echo "Git directory owner: $(ls -la .git/ | head -2)"
+            git config --global --add safe.directory /home/bellukstudio/projects/myapi-app.bellukstudio.my.id
+            git config --global --add safe.directory '*'
+              
+            # Fix ownership issues
+            sudo chown -R $(whoami):$(whoami) . || true  
             git pull origin main
 
             # echo "🧼 Stop and remove old container..."
