@@ -5,10 +5,10 @@ export class Skill {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({nullable: true})
     skillName: string;
 
-    @Column()
+    @Column({ nullable: true })
     level: string;
 
 }
