@@ -8,16 +8,16 @@ export class User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column() // 
+    @Column({nullable: true}) // 
     name: string;
 
-    @Column({ unique: true })
+    @Column({ unique: true,nullable: true })
     email: string;
 
-    @Column()
+    @Column({nullable: true})
     password: string;
 
-    @Column()
+    @Column({nullable: true})
     role: Role;
 
 

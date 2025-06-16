@@ -5,15 +5,15 @@ export class Contact {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()
+    @Column({nullable: true})
     name: string;
 
-    @Column()
+    @Column({nullable: true})
     email: string;
 
-    @Column()
+    @Column({nullable: true})
     subject: string;
 
-    @Column('text')
+    @Column({type: 'text',nullable: true})
     message: string;
 }
