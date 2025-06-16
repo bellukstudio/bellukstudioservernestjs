@@ -15,7 +15,7 @@ export class SkillService {
 
 
     async findAll(query: Query): Promise<Skill[]> {
-        const resPerPage = 10;
+        const resPerPage = 100;
 
         const currentPage = Number(query.page) || 1;
 
