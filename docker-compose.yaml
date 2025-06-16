@@ -1,20 +1,19 @@
-version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: postgres_myapi
-    restart: always
-    environment:
-      POSTGRES_USER: bellukstudio
-      POSTGRES_PASSWORD: BellukStudio121.
-      POSTGRES_DB: bellukstudioserver
-    ports:
-      - 5432:5432
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - nest-network
+  # postgres:
+  #   image: postgres:15
+  #   container_name: postgres_myapi
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: bellukstudio
+  #     POSTGRES_PASSWORD: BellukStudio121.
+  #     POSTGRES_DB: bellukstudioserver
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - nest-network
 
   myapi-app:
     build:
@@ -22,8 +21,8 @@ services:
       dockerfile: Dockerfile
     container_name: myapi-app
     restart: always
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
     env_file:
       - .env
     ports:
@@ -31,31 +30,29 @@ services:
     volumes:
       - .:/app
     networks:
-      - nest-network
+      - bellukstudio_network
 
-  # phpmyadmin tidak digunakan untuk PostgreSQL
-  # Gunakan adminer sebagai alternatif:
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_myapi
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@bellukstudio.my.id
-      PGADMIN_DEFAULT_PASSWORD: BellukStudio123.
-      PGADMIN_LISTEN_ADDRESS: 0.0.0.0  # Force IPv4
-      PGADMIN_LISTEN_PORT: 80	
-    ports:
-      - 8080:80
-    depends_on:
-      - postgres
-    volumes:
-      - ./imports:/var/lib/pgadmin/imports  
-    networks:
-      - nest-network
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin_myapi
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@bellukstudio.my.id
+  #     PGADMIN_DEFAULT_PASSWORD: BellukStudio123.
+  #     PGADMIN_LISTEN_ADDRESS: 0.0.0.0  # Force IPv4
+  #     PGADMIN_LISTEN_PORT: 80	
+  #   ports:
+  #     - 8080:80
+  #   depends_on:
+  #     - postgres
+  #   volumes:
+  #     - ./imports:/var/lib/pgadmin/imports  
+  #   networks:
+      # - nest-network
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
 
 networks:
-  nest-network:
-    driver: bridge
+  bellukstudio_network:
+    external: true
