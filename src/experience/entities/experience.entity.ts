@@ -8,15 +8,15 @@ export class Experience {
     @PrimaryGeneratedColumn('uuid')
     id: string;
     //* Job title of the experience
-    @Column()
+    @Column({nullable: true})
     jobTitle: string;
 
     //* Company name where the experience was gained
-    @Column()
+    @Column({nullable: true})
     company: string;
 
     //* Starting month of the experience
-    @Column()
+    @Column({nullable: true})
     startMonth: string;
 
     //* Finishing month of the experience
@@ -24,7 +24,7 @@ export class Experience {
     finishMonth: string;
 
     //* Overview or description of the experience
-    @Column({ type: 'text' })
+    @Column({ type: 'text' , nullable: true})
     overview: string;
 
     //* Reference to the user (Many experiences belong to one user)

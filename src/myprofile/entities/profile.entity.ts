@@ -5,22 +5,22 @@ export class Profile {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ type: 'varchar', length: 255, nullable: true })
     fullname: string;
 
-    @Column({ type: 'varchar', unique: true, length: 255 })
+    @Column({ type: 'varchar', unique: true, length: 255 , nullable: true})
     email: string;
 
-    @Column({ type: 'varchar', length: 15 })
+    @Column({ type: 'varchar', length: 15, nullable: true })
     contact: string;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar' , nullable: true})
     liveIn: string;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar' , nullable: true})
     available: string;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', nullable: true })
     degree: string;
 
     @Column({ type: 'text', nullable: true })
