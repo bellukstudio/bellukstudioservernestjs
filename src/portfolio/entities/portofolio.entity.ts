@@ -6,10 +6,10 @@ export class Portfolio {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column()  // Maps to the title column
+    @Column({ nullable: true })  // Maps to the title column
     title: string;
 
-    @Column({ type:'text'})  // Maps to the description column
+    @Column({ type: 'text' })  // Maps to the description column
     description: string;
 
     @Column({ nullable: true })  // Maps to the URL portfolio column
