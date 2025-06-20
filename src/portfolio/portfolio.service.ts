@@ -23,7 +23,7 @@ export class PortfolioService {
     async findAll(query: Query): Promise<Portfolio[]> {
 
         //* Set the number of result per page
-        const restPerPage = 10;
+        const restPerPage = 100;
 
         //* Determine the current page, default to 1 if not specified
         const currentPage = Number(query.page) || 1;
