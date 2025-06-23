@@ -9,6 +9,7 @@ import { CreatePortfolioDto } from './dto/create-portoflio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { Portfolio } from './entities/portofolio.entity';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -31,8 +32,15 @@ export class PortfolioController {
         portfolioDto: CreatePortfolioDto,
         @Req() req
     ) {
-        const portfolio = await this.portfolioService.create(portfolioDto, req.user)
-        return { message: "Successfully", portfolio: portfolio }
+        const portfolio = new Portfolio;
+        portfolio.title = portfolioDto.title;
+        portfolio.description = portfolioDto.description;
+        portfolio.urlPortfolio = portfolioDto.urlPortfolio;
+        portfolio.urlGithub = portfolioDto.urlGithub;
+        portfolio.user = req.user;
+        
+        
+        return this.portfolioService.create(portfolioDto, req.user)
     }
 
     @Get(":id")

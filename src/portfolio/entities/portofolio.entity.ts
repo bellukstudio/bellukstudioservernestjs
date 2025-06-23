@@ -24,8 +24,4 @@ export class Portfolio {
     @ManyToOne(() => User, user => user.portfolios)  // Relation to User entity
     @JoinColumn({ name: 'userId' })  // This specifies the column name for the foreign key
     user: User;
-
-    @CreateDateColumn()  // Automatically set the creation timestamp
-    createdAt: Date;
-
 }
