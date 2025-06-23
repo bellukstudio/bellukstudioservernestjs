@@ -28,6 +28,4 @@ export class Portfolio {
     @CreateDateColumn()  // Automatically set the creation timestamp
     createdAt: Date;
 
-    @UpdateDateColumn()  // Automatically set the update timestamp
-    updatedat: Date;
 }
