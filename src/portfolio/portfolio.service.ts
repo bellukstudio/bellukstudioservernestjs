@@ -45,6 +45,13 @@ export class PortfolioService {
         return data;
     }
 
+    async findAllWithoutPagination(): Promise<Portfolio[]> {
+        const data = await this.portofolioRepository.find();
+        console.log('📊 Total Data (Without Pagination):', data.length);
+        return data;
+    }
+
+
     //* Create A new portfolio
     async create(portfolioDto: CreatePortfolioDto, user: User): Promise<Portfolio> {
         const portfolio = this.portofolioRepository.create(portfolioDto);

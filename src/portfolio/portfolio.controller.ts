@@ -24,6 +24,12 @@ export class PortfolioController {
         return { message: "Successfully", portfolio: portfolio }
     }
 
+    @Get('all')
+    async getAllPortfolioWithoutPagination() {
+        const portfolio = await this.portfolioService.findAllWithoutPagination()
+        return { message: "Successfully", portfolio: portfolio }
+    }
+
     @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
