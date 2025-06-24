@@ -70,7 +70,8 @@ export class PortfolioController {
         portfolio.user = req.user;
         
         
-        return this.portfolioService.create(portfolioDto, req.user)
+        const portfolioService =  this.portfolioService.create(portfolioDto, req.user)
+        return { message: "Successfully", portfolio: portfolioService }
     }
 
     // ✅ Update Portfolio by ID (Admin Only)
