@@ -24,7 +24,6 @@ import { CreatePortfolioDto } from './dto/create-portoflio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { Portfolio } from './entities/portofolio.entity';
 
 @Controller('portfolio')
 export class PortfolioController {
