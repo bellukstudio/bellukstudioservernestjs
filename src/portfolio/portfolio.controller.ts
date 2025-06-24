@@ -24,6 +24,7 @@ import { CreatePortfolioDto } from './dto/create-portoflio.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { Portfolio } from './entities/portofolio.entity';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -57,32 +58,47 @@ export class PortfolioController {
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async createPortfolio(
-        @Body() portfolioDto: CreatePortfolioDto,
-        @Req() req,
+        @Body()
+        portfolioDto: CreatePortfolioDto,
+        @Req() req
     ) {
-        return this.portfolioService.create(portfolioDto, req.user);
+        const portfolio = new Portfolio;
+        portfolio.title = portfolioDto.title;
+        portfolio.description = portfolioDto.description;
+        portfolio.urlPortfolio = portfolioDto.urlPortfolio;
+        portfolio.urlGithub = portfolioDto.urlGithub;
+        portfolio.user = req.user;
+        
+        
+        return this.portfolioService.create(portfolioDto, req.user)
     }
 
     // ✅ Update Portfolio by ID (Admin Only)
-    @Put(':id/update')
+    @Put(":id/update")
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
     async updatePortfolio(
-        @Param('id') id: string,
-        @Body() portfolioDto: UpdatePortfolioDto,
+        @Param("id")
+        id: string,
+        @Body()
+        portfolioDto: UpdatePortfolioDto
     ) {
-        const portfolio = await this.portfolioService.updateById(id, portfolioDto);
-        return { message: "Successfully", portfolio };
+        const portfolio = await this.portfolioService.updateById(id, portfolioDto)
+        return { message: "Successfully", portfolio: portfolio }
     }
 
     // ✅ Delete Portfolio by ID (Admin Only)
-    @Delete(':id/delete')
+    @Delete(":id/delete")
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
-    async deletePortfolio(@Param('id') id: string) {
-        await this.portfolioService.deleteById(id);
-        return { message: "Successfully delete portfolio" };
+    async deletePortfolio(
+        @Param("id")
+        id: string
+    ) {
+        await this.portfolioService.deleteById(id)
+        return { message: "Successfully delete portfolio" }
     }
+
 
     // ✅ Upload Image for Portfolio (Admin Only)
     @Put('upload/:id')
@@ -97,7 +113,7 @@ export class PortfolioController {
                     fileType: /(jpg|jpeg|png)$/,
                 })
                 .addMaxSizeValidator({
-                    maxSize: 1 * 1024 * 1024, // 1MB
+                    maxSize: 1 * 1024 * 1024,
                     message: 'File size must be less than 1MB',
                 })
                 .build({
@@ -107,6 +123,6 @@ export class PortfolioController {
         file: Express.Multer.File,
     ) {
         const upload = await this.portfolioService.uploadImage(id, file);
-        return { message: "Successfully", photo: upload };
+        return { message: "Successfully", photo: upload }
     }
 }
