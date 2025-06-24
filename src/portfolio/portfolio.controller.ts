@@ -47,7 +47,7 @@ export class PortfolioController {
 
 
     // ✅ Get Portfolio by ID
-    @Get(':id')
+    @Get(':id/show')
     async getPortfolio(@Param('id') id: string) {
         const portfolio = await this.portfolioService.findById(id);
         return { message: "Successfully", portfolio };
