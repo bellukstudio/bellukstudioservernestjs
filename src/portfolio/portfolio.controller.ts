@@ -32,6 +32,12 @@ export class PortfolioController {
         private readonly portfolioService: PortfolioService,
     ) {}
 
+    // ✅ Get All Portfolios without Pagination
+    @Get('allportfolio')
+    async getAllPortfolioWithoutPagination() {
+        const portfolio = await this.portfolioService.findAllWithoutPagination();
+        return { message: "Successfully", portfolio };
+    }
     // ✅ Get All Portfolios with Pagination & Search
     @Get()
     async getAllPortfolio(@Query() query: ExpressQuery) {
@@ -39,12 +45,6 @@ export class PortfolioController {
         return { message: "Successfully", portfolio };
     }
 
-    // ✅ Get All Portfolios without Pagination
-    @Get('all')
-    async getAllPortfolioWithoutPagination() {
-        const portfolio = await this.portfolioService.findAllWithoutPagination();
-        return { message: "Successfully", portfolio };
-    }
 
     // ✅ Get Portfolio by ID
     @Get(':id')
