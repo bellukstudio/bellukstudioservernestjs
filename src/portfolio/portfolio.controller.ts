@@ -1,21 +1,6 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    Put,
-    Query,
-    Req,
-    UseGuards,
-    UseInterceptors,
-    ParseFilePipeBuilder,
-    HttpStatus,
-    UploadedFile,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards, UseInterceptors, ParseFilePipeBuilder, HttpStatus, UploadedFile, } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
-import { Query as ExpressQuery } from 'express-serve-static-core';
+import { Query as ExpressQuery } from 'express-serve-static-core'
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,32 +13,23 @@ import { Portfolio } from './entities/portofolio.entity';
 
 @Controller('portfolio')
 export class PortfolioController {
+
     constructor(
         private readonly portfolioService: PortfolioService,
-    ) {}
+    ) { }
 
-    // ✅ Get All Portfolios without Pagination
     @Get('allportfolio')
     async getAllPortfolioWithoutPagination() {
         const portfolio = await this.portfolioService.findAllWithoutPagination();
         return { message: "Successfully", portfolio };
     }
-    // ✅ Get All Portfolios with Pagination & Search
+
     @Get()
     async getAllPortfolio(@Query() query: ExpressQuery) {
-        const portfolio = await this.portfolioService.findAll(query);
-        return { message: "Successfully", portfolio };
+        const portfolio = await this.portfolioService.findAll(query)
+        return { message: "Successfully", portfolio: portfolio }
     }
 
-
-    // ✅ Get Portfolio by ID
-    @Get(':id/show')
-    async getPortfolio(@Param('id') id: string) {
-        const portfolio = await this.portfolioService.findById(id);
-        return { message: "Successfully", portfolio };
-    }
-
-    // ✅ Create Portfolio (Admin Only)
     @Post('store')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
@@ -68,13 +44,20 @@ export class PortfolioController {
         portfolio.urlPortfolio = portfolioDto.urlPortfolio;
         portfolio.urlGithub = portfolioDto.urlGithub;
         portfolio.user = req.user;
-        
-        
-        const portfolioService =  this.portfolioService.create(portfolioDto, req.user)
-        return { message: "Successfully", portfolio: portfolioService }
+
+
+        return this.portfolioService.create(portfolioDto, req.user)
     }
 
-    // ✅ Update Portfolio by ID (Admin Only)
+    @Get(":id/show")
+    async getPortfolio(
+        @Param("id")
+        id: string
+    ) {
+        const portfolio = await this.portfolioService.findById(id)
+        return { message: "Successfully", portfolio: portfolio }
+    }
+
     @Put(":id/update")
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
@@ -88,7 +71,6 @@ export class PortfolioController {
         return { message: "Successfully", portfolio: portfolio }
     }
 
-    // ✅ Delete Portfolio by ID (Admin Only)
     @Delete(":id/delete")
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)
@@ -100,8 +82,6 @@ export class PortfolioController {
         return { message: "Successfully delete portfolio" }
     }
 
-
-    // ✅ Upload Image for Portfolio (Admin Only)
     @Put('upload/:id')
     @Roles(Role.Admin)
     @UseGuards(AuthGuard(), RolesGuard)

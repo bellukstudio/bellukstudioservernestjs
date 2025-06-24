@@ -18,36 +18,33 @@ export class PortfolioService {
         private readonly firebaseService: FirebaseService
     ) { }
 
-    //* Retrieve portfolio with pagination and search keyword
-        // 📥 Get All without Pagination
+
     async findAllWithoutPagination(): Promise<Portfolio[]> {
         const data = await this.portofolioRepository.find();
         return data;
     }
+    //* Retrieve portfolio with pagination and search keyword
 
     async findAll(query: Query): Promise<Portfolio[]> {
+
+        //* Set the number of result per page
         const restPerPage = 100;
+
+        //* Determine the current page, default to 1 if not specified
         const currentPage = Number(query.page) || 1;
-        const skip = restPerPage * (currentPage - 1);
 
-        // Filter by keyword in title (if provided)
-        const whereCondition = query.keyword
-            ? { title: Like(`%${query.keyword}%`) }
-            : {};
+        //* calculate th enumber of documents to skip based on the current page
+        const skip = restPerPage * (currentPage - 1)
 
-        console.log('⏱ Current Page:', currentPage);
-        console.log('🔍 Keyword Filter:', whereCondition);
-        console.log('📦 Skip:', skip, 'Take:', restPerPage);
+        const keyword = query.keyword ? {
+            title: Like(`%${query.keyword}%`)
+        } : {}
 
-        // Fetch with pagination and optional keyword filter
-        const data = await this.portofolioRepository.find({
-            where: whereCondition,
+        return this.portofolioRepository.find({
+            where: keyword,
             skip,
-            take: restPerPage,
+            take: restPerPage
         });
-
-        console.log('📊 Total Data Fetched:', data.length);
-        return data;
     }
 
     //* Create A new portfolio
